@@ -1,0 +1,16 @@
+﻿Extra XP depending on fight
+- Critical hits
+- Rounds
+- Near death kill
+- Run from large enemy in single try
+- Defeating many enemies
+- No misses
+- Perfect fight
+- No hits
+- Fists only
+
+Tracking
+- Damage dealt/received
+- Physical vs magic damage
+- Items used
+
