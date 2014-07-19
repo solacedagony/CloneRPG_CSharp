@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class CMainMenu
+    class CMainMenu : CModule
     {
         CModuleManager moduleManager;
 

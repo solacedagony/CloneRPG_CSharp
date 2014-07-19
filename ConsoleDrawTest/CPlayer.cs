@@ -38,6 +38,17 @@ namespace CloneRPG
         public PlayerClass playerClass;
 
         public List<CItem> inventory;
+        public CItem weaponLeft;
+        public CItem weaponRight;
+        public CItem head;
+        public CItem chest;
+        public CItem arms;
+        public CItem legs;
+        public CItem fingerLeft;
+        public CItem fingerRight;
+        public CItem neck;
+
+        public bool isNPC;
 
         public CPlayer()
         {
@@ -62,6 +73,17 @@ namespace CloneRPG
             calculateXPToLevel();
 
             inventory = new List<CItem>();
+            weaponLeft = null;
+            weaponRight = null;
+            head = null;
+            chest = null;
+            arms = null;
+            legs = null;
+            fingerLeft = null;
+            fingerRight = null;
+            neck = null;
+
+            isNPC = true;
         }
 
         public double calculateAttack()

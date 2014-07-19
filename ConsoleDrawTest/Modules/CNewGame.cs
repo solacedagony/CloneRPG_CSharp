@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class CNewGame
+    class CNewGame : CModule
     {
         CModuleManager moduleManager;
         NewGameState newGameState;
@@ -83,6 +83,7 @@ namespace CloneRPG
                             moduleManager.player.intelligence = 1;
                             moduleManager.player.xp = 0;
                             moduleManager.player.level = 1;
+                            moduleManager.player.isNPC = false;
 
                             goodKeyPress = true;
                             moduleManager.switchModule(CModuleManager.ModuleType.Map);
@@ -100,6 +101,7 @@ namespace CloneRPG
                             moduleManager.player.intelligence = 2;
                             moduleManager.player.xp = 0;
                             moduleManager.player.level = 1;
+                            moduleManager.player.isNPC = false;
 
                             goodKeyPress = true;
                             moduleManager.switchModule(CModuleManager.ModuleType.Map);
@@ -117,6 +119,7 @@ namespace CloneRPG
                             moduleManager.player.intelligence = 15;
                             moduleManager.player.xp = 0;
                             moduleManager.player.level = 1;
+                            moduleManager.player.isNPC = false;
 
                             goodKeyPress = true;
                             moduleManager.switchModule(CModuleManager.ModuleType.Map);

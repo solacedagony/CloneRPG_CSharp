@@ -9,7 +9,7 @@ using Utility;
 
 namespace CloneRPG
 {
-    class CMap
+    class CMap : CModule
     {
         CModuleManager moduleManager;
 
@@ -241,6 +241,12 @@ namespace CloneRPG
                             // Game could not be saved
                             moduleManager.Log("Game could not be saved: " + moduleManager.player.name + ".txt");
                         }
+                    }
+                    break;
+
+                case ConsoleKey.I:
+                    {
+
                     }
                     break;
             }

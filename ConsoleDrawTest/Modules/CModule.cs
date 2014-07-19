@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class CNPC
+    abstract class CModule
     {
+        abstract public void draw();
 
+        abstract public void initialize();
+
+        abstract public void destroy();
     }
 }

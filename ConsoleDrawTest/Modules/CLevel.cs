@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class CLevel
+    class CLevel : CModule
     {
         CModuleManager moduleManager;
 

@@ -8,7 +8,7 @@ using Utility;
 
 namespace CloneRPG
 {
-    class CFight
+    class CFight : CModule
     {
         CModuleManager moduleManager;
         FightGameState fightGameState;
@@ -47,13 +47,23 @@ namespace CloneRPG
             DEFEAT
         }
 
+        public override void initialize()
+        {
+
+        }
+
+        public override void destroy()
+        {
+
+        }
+
         public CFight(CModuleManager moduleManagerArg)
         {
             moduleManager = moduleManagerArg;
             fightGameState = FightGameState.FIGHT;
         }
 
-        public void draw()
+        public override void draw()
         {
             // Clear screen
             Console.Clear();

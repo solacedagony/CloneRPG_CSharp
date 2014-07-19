@@ -54,7 +54,10 @@ namespace CloneRPG
 
         // Game elements
         List<CItem> items = null;
-        List<CNPC> npcs = null;
+        List<CPlayer> npcs = null;
+
+        // Module
+        CModule currentModule;
 
         // Constructor
         public CModuleManager()

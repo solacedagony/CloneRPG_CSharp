@@ -564,11 +564,11 @@ namespace Utility
             return false;
         }
 
-        static public bool loadNPCs(ref List<CloneRPG.CNPC> npcList, string npcDirectory)
+        static public bool loadNPCs(ref List<CloneRPG.CPlayer> npcList, string npcDirectory)
         {
 
 
-            return false;
+            return true;
         }
 
         static private List<string> getAllFilesOfTypeInDirectory(string directory, string extension)

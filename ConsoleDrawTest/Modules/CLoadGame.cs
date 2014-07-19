@@ -7,7 +7,7 @@ using System.IO;
 
 namespace CloneRPG
 {
-    class CLoadGame
+    class CLoadGame : CModule
     {
         CModuleManager moduleManager;
 
