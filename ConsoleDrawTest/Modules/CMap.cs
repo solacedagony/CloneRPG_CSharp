@@ -9,7 +9,7 @@ using Utility;
 
 namespace CloneRPG
 {
-    class CMap : CModule
+    class CMap : IModule
     {
         CModuleManager moduleManager;
 
@@ -246,7 +246,7 @@ namespace CloneRPG
 
                 case ConsoleKey.I:
                     {
-
+                        moduleManager.switchModule(CModuleManager.ModuleType.InventoryMap);
                     }
                     break;
             }
@@ -295,7 +295,7 @@ namespace CloneRPG
 
         private void setupEnemy()
         {
-            CPlayer tempEnemy = new CPlayer();
+            CPlayer tempEnemy = new CPlayer(moduleManager);
             tempEnemy.name = "BadGuy";
             tempEnemy.hp = 20;
             tempEnemy.hpMax = 20;
@@ -350,6 +350,16 @@ namespace CloneRPG
             map.Add("##################################################################################################################################################");
             map.Add("#    ########################################################################################################################       ##############");
             map.Add("##################################################################################################################################################");
+        }
+
+        public void initialize()
+        {
+
+        }
+
+        public void destroy()
+        {
+
         }
     }
 }

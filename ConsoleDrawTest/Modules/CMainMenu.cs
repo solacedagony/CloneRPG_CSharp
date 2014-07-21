@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class CMainMenu : CModule
+    class CMainMenu : IModule
     {
         CModuleManager moduleManager;
 
@@ -36,7 +36,7 @@ namespace CloneRPG
             if (keyInfo.Key.Equals(ConsoleKey.D1))
             {
                 // Create new base player
-                CPlayer tempPlayer = new CPlayer();
+                CPlayer tempPlayer = new CPlayer(moduleManager);
                 tempPlayer.name = "";
                 tempPlayer.playerClass = PlayerClass.WARRIOR;
                 tempPlayer.hp = -1;
@@ -61,6 +61,16 @@ namespace CloneRPG
             {
                 moduleManager.switchModule(CModuleManager.ModuleType.Exit);
             }
+        }
+
+        public void initialize()
+        {
+
+        }
+
+        public void destroy()
+        {
+
         }
     }
 }

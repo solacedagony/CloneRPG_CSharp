@@ -17,6 +17,7 @@ namespace CloneRPG
 
     class CPlayer
     {
+        CModuleManager moduleManager;
         List<double> xpToLevel = new List<double>();
 
         public string name;
@@ -50,7 +51,7 @@ namespace CloneRPG
 
         public bool isNPC;
 
-        public CPlayer()
+        public CPlayer(CModuleManager moduleManagerArg )
         {
             name = "";
             mapPosX = 1;
@@ -84,6 +85,8 @@ namespace CloneRPG
             neck = null;
 
             isNPC = true;
+
+            moduleManager = moduleManagerArg;
         }
 
         public double calculateAttack()
@@ -142,6 +145,20 @@ namespace CloneRPG
         public double xpUntilNextLevel()
         {
             return (xpToLevel[level] - xp);
+        }
+
+        public void addItem(CItem newItem )
+        {
+            if( newItem != null)
+            {
+                inventory.Add(newItem);
+            }
+            else
+            {
+                string errorMessage = this.GetType().ToString() + ":" + System.Reflection.MethodBase.GetCurrentMethod().ToString() + ": newItem is null. Cannot continue.";
+                moduleManager.Log(errorMessage);
+                throw new Exception(errorMessage);
+            }
         }
     }
 }

@@ -144,13 +144,13 @@ namespace Utility
             return true;
         }
 
-        static public bool loadGame(ref CloneRPG.CPlayer playerData, string playerName)
+        static public bool loadGame(ref CloneRPG.CModuleManager moduleManager, string playerName)
         {
             // Delimiters for file loading
             char[] delimiters = { ':' };
 
             // Load new character with default values
-            CloneRPG.CPlayer tempPlayer = new CloneRPG.CPlayer();
+            CloneRPG.CPlayer tempPlayer = new CloneRPG.CPlayer(moduleManager);
             tempPlayer.name = "";
             tempPlayer.level = -1;
             tempPlayer.xp = -1;
@@ -264,11 +264,11 @@ namespace Utility
                 tempPlayer.mapPosX > -1 &&
                 tempPlayer.mapPosY > -1)
             {
-                playerData = tempPlayer;
+                moduleManager.player = tempPlayer;
                 tempPlayer = null;
 
                 Console.Clear();
-                Console.WriteLine("Character loaded successfully: " + playerData.name);
+                Console.WriteLine("Character loaded successfully: " + moduleManager.player.name);
                 Utility.Interaction.pressAnyKeyToContinue(0, 2);
 
                 return true;
@@ -277,7 +277,7 @@ namespace Utility
             {
                 tempPlayer = null;
                 Console.Clear();
-                Console.WriteLine("Character loaded successfully: " + playerData.name);
+                Console.WriteLine("Character loaded successfully: " + moduleManager.player.name);
                 Utility.Interaction.pressAnyKeyToContinue(0, 2);
 
                 return false;
@@ -325,6 +325,7 @@ namespace Utility
 
         static public bool loadItems(ref List<CloneRPG.CItem> itemList, string itemDirectory)
         {
+            string comment = "//";
             char[] delimiters = { ':' };
             List<string> itemFiles = new List<string>();
             List<CloneRPG.CItem> tempItemList = new List<CloneRPG.CItem>();
@@ -346,6 +347,11 @@ namespace Utility
                         string[] parameterList;
                         string parameter = "";
 
+                        if (line.Contains(comment))
+                        {
+                            continue;
+                        }
+
                         if (foundStart)
                         {
                             parameterList = line.Split(delimiters);
@@ -366,7 +372,7 @@ namespace Utility
                         else if (foundStart &&
                                 !foundType)
                         {
-                            if( line.Contains(ITEM_NAME))
+                            if (line.Contains(ITEM_NAME))
                             {
                                 tempItem.name = parameter;
                             }
@@ -409,14 +415,14 @@ namespace Utility
                         else if (foundStart &&
                                  foundType)
                         {
-                            if( line.Contains(ITEM_END))
+                            if (line.Contains(ITEM_END))
                             {
                                 foundStart = false;
-                                tempItemList.Add(tempItem);
+                                foundType = false;
+                                itemList.Add(tempItem);
                                 tempItem = new CloneRPG.CItem();
                             }
-
-                            if (tempItem.itemType.Equals(CloneRPG.CItem.ItemType.QUEST))
+                            else if (tempItem.itemType.Equals(CloneRPG.CItem.ItemType.QUEST))
                             {
                                 if (line.Contains(ITEM_QUESTID))
                                 {
@@ -497,13 +503,13 @@ namespace Utility
                                     {
                                         tempItem.damageMax = Convert.ToDouble(parameter);
                                     }
-                                    else if( line.Contains(ITEM_DAMAGETYPE))
+                                    else if (line.Contains(ITEM_DAMAGETYPE))
                                     {
-                                        if( parameter.Equals(DAMAGE_BLUNT))
+                                        if (parameter.Equals(DAMAGE_BLUNT))
                                         {
                                             tempItem.damageType = CloneRPG.CItem.DamageType.BLUNT;
                                         }
-                                        else if(parameter.Equals(DAMAGE_PIERCE) )
+                                        else if (parameter.Equals(DAMAGE_PIERCE))
                                         {
                                             tempItem.damageType = CloneRPG.CItem.DamageType.PIERCE;
                                         }
@@ -550,18 +556,20 @@ namespace Utility
                                 }
                                 else if (line.Contains(ITEM_ABSORB))
                                 {
-                                    tempItem.absorb= Convert.ToDouble(parameter);
+                                    tempItem.absorb = Convert.ToDouble(parameter);
                                 }
+                            }
+                            else
+                            {
+                                Utility.Interaction.throwError("Item type parameter unknown: " + line);
+                                return false;
                             }
                         }
                     }
-                    // TODO: Add item validation
-                    itemList = tempItemList;
-                    tempItemList = null;
                 }
             }
 
-            return false;
+            return true;
         }
 
         static public bool loadNPCs(ref List<CloneRPG.CPlayer> npcList, string npcDirectory)
@@ -589,6 +597,17 @@ namespace Utility
             }
 
             return fileList;
+        }
+    }
+}
+
+namespace DebugHelperNS
+{
+    static class DebugHelper
+    {
+        static public string getMethodName()
+        {
+            return System.Reflection.MethodBase.GetCurrentMethod().ToString();
         }
     }
 }

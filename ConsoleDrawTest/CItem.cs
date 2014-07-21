@@ -41,6 +41,7 @@ namespace CloneRPG
         public string name = "";
         public int cost = -1;
         public ItemType itemType = ItemType.NONE;
+        public int quantity = 0;
 
         // Weapon/armor
         public EquipablePosition equipablePosition = EquipablePosition.NONE;

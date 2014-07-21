@@ -6,32 +6,28 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class InventoryMap : CModule
+    class CHelpMap : IModule
     {
         CModuleManager moduleManager;
 
-        public InventoryMap( CModuleManager moduleManagerArg )
+        public CHelpMap(CModuleManager moduleManagerArg)
         {
             moduleManager = moduleManagerArg;
         }
 
-        void draw()
-        {
-            drawHeader();
-        }
-
-        void drawHeader()
+        public void draw()
         {
 
         }
 
-        void initialize()
+        public void initialize()
         {
-            //calculateList();
+
         }
 
-        void destroy()
+        public void destroy()
         {
+
         }
     }
 }
