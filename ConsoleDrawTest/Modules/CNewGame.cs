@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloneRPG
 {
-    class CNewGame
+    class CNewGame : IModule
     {
         CModuleManager moduleManager;
         NewGameState newGameState;
@@ -83,6 +83,14 @@ namespace CloneRPG
                             moduleManager.player.intelligence = 1;
                             moduleManager.player.xp = 0;
                             moduleManager.player.level = 1;
+                            moduleManager.player.isNPC = false;
+
+                            // Add sword and chest armor
+                            for (int i = 0; i < 20; i++)
+                            {
+                                moduleManager.player.addItem(moduleManager.itemManager.getItemByName("Wooden Sword"));
+                            }
+                            moduleManager.player.addItem(moduleManager.itemManager.getItemByName("Bamboo Chest Piece"));
 
                             goodKeyPress = true;
                             moduleManager.switchModule(CModuleManager.ModuleType.Map);
@@ -100,6 +108,11 @@ namespace CloneRPG
                             moduleManager.player.intelligence = 2;
                             moduleManager.player.xp = 0;
                             moduleManager.player.level = 1;
+                            moduleManager.player.isNPC = false;
+
+                            // Add sword and chest armor
+                            moduleManager.player.addItem(moduleManager.itemManager.getItemByName("Wooden Dagger"));
+                            moduleManager.player.addItem(moduleManager.itemManager.getItemByName("Bamboo Chest Piece"));
 
                             goodKeyPress = true;
                             moduleManager.switchModule(CModuleManager.ModuleType.Map);
@@ -117,6 +130,11 @@ namespace CloneRPG
                             moduleManager.player.intelligence = 15;
                             moduleManager.player.xp = 0;
                             moduleManager.player.level = 1;
+                            moduleManager.player.isNPC = false;
+
+                            // Add sword and chest armor
+                            moduleManager.player.addItem(moduleManager.itemManager.getItemByName("Wooden Staff"));
+                            moduleManager.player.addItem(moduleManager.itemManager.getItemByName("Cloth Robe"));
 
                             goodKeyPress = true;
                             moduleManager.switchModule(CModuleManager.ModuleType.Map);
@@ -130,6 +148,16 @@ namespace CloneRPG
                     newGameState = NewGameState.NAME;
                 }
             }
+        }
+
+        public void initialize()
+        {
+
+        }
+
+        public void destroy()
+        {
+
         }
     }
 }

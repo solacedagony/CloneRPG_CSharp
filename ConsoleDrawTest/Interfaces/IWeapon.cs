@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CloneRPG
+namespace CloneRPG.Interfaces
 {
-    class CNPC
+    interface IWeapon
     {
+        string name;
+        
 
     }
 }

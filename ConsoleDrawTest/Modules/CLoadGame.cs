@@ -7,7 +7,7 @@ using System.IO;
 
 namespace CloneRPG
 {
-    class CLoadGame
+    class CLoadGame : IModule
     {
         CModuleManager moduleManager;
 
@@ -71,16 +71,26 @@ namespace CloneRPG
             // Offset key down
             int playerIndex = keyInfo.Key - ConsoleKey.D1;
             
-            if( Utility.FileIO.loadGame(ref moduleManager.player,players[playerIndex]))
+            if( Utility.FileIO.loadGame(ref moduleManager,players[playerIndex]))
             {
                 moduleManager.Log("Successfully loaded character: " + players[playerIndex]);
                 moduleManager.switchModule(CModuleManager.ModuleType.Map);
             }
             else
             {
-                moduleManager.Log("Successfully loaded character: " + players[playerIndex]);
+                moduleManager.Log("Could not load character: " + players[playerIndex]);
                 moduleManager.switchModule(CModuleManager.ModuleType.MainMenu);
             }
+        }
+        
+        public void initialize()
+        {
+
+        }
+
+        public void destroy()
+        {
+
         }
     }
 }
