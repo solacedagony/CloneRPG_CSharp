@@ -29,7 +29,7 @@ namespace CloneRPG
 
         public const string gameName = "CloneRPG";
         public const int versionMajor = 1;
-        public const int versionMinor = 1;
+        public const int versionMinor = 2;
 
         private readonly string logFilename;
         private const string logDirectory = "Logs";

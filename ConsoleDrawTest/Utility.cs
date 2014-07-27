@@ -9,6 +9,363 @@ using Defines;
 
 namespace Utility
 {
+    static class StringColorizer
+    {
+        public class ColorTag
+        {
+            public ConsoleColor color = ConsoleColor.Black;
+            public string tag = "";
+            public int index = 0;
+        }
+
+        public static void colorizeString( string data )
+        {
+            List<ColorTag> colorTags = new List<ColorTag>();
+
+            colorTags = parseColorTags( ref data );
+            printString( data, colorTags );
+        }
+
+        private static List<ColorTag> parseColorTags( ref string data )
+        {
+            char startTag = '{';
+            char endTag = '}';
+            int pos = 0;
+            int offset = 0;
+            List<ColorTag> tagList = new List<ColorTag>();
+
+            while( (pos = data.IndexOf( startTag, offset )) >= 0 )
+            {
+                var tempTag = new ColorTag();
+                tempTag.index = pos;
+                tagList.Add( tempTag );
+
+                offset = pos + 1;
+            }
+
+            // Validate data
+            for( int i = 0 ; i < tagList.Count() ; i++ )
+            {
+                int endPos = data.IndexOf( endTag, tagList[i].index );
+                if( endPos > 0 )
+                {
+                    tagList[i].tag = data.Substring( tagList[i].index, endPos - tagList[i].index + 1 );
+
+                    // Remove tag from data
+                    data = data.Remove( tagList[i].index, tagList[i].tag.Length );
+                    for( int j = i + 1 ; j < tagList.Count() ; j++ )
+                    {
+                        tagList[j].index -= tagList[i].tag.Length;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return tagList;
+        }
+
+        private static void printString( string data, List<ColorTag> colorTags )
+        {
+            for( int i = 0 ; i < colorTags.Count() ; i++ )
+            {
+                if( i == 0 )
+                {
+                    Console.Write( data.Substring( 0, colorTags[i].index ) );
+                }
+                else if( i > 0 )
+                {
+                    Console.Write( data.Substring( colorTags[i - 1].index, colorTags[i].index - colorTags[i - 1].index ) );
+                }
+                ConsoleColor color = returnColor( colorTags[i].tag );
+                if( colorTags[i].tag.Contains("FG" ))
+                {
+                    Console.ForegroundColor = color;
+                }
+                else
+                {
+                   Console.BackgroundColor = color;
+                }
+            }
+            Console.Write( data.Substring( colorTags[colorTags.Count() - 1].index, data.Length - colorTags[colorTags.Count() - 1].index ) );
+        }
+
+        private static ConsoleColor returnColor( string tag )
+        {
+            if( tag == Colors.FGblack )
+            {
+                return ConsoleColor.Black;
+            }
+            else if( tag == Colors.FGdarkblue )
+            {
+                return ConsoleColor.DarkBlue;
+            }
+            else if( tag == Colors.FGdarkgreen )
+            {
+                return ConsoleColor.DarkGreen;
+            }
+            else if( tag == Colors.FGdarkcyan )
+            {
+                return ConsoleColor.DarkCyan;
+            }
+            else if( tag == Colors.FGdarkred )
+            {
+                return ConsoleColor.DarkRed;
+            }
+            else if( tag == Colors.FGdarkmagenta )
+            {
+                return ConsoleColor.DarkMagenta;
+            }
+            else if( tag == Colors.FGdarkyellow )
+            {
+                return ConsoleColor.DarkYellow;
+            }
+            else if( tag == Colors.FGgray )
+            {
+                return ConsoleColor.Gray;
+            }
+            else if( tag == Colors.FGdarkgray )
+            {
+                return ConsoleColor.DarkGray;
+            }
+            else if( tag == Colors.FGblue )
+            {
+                return ConsoleColor.Blue;
+            }
+            else if( tag == Colors.FGgreen )
+            {
+                return ConsoleColor.Green;
+            }
+            else if( tag == Colors.FGcyan )
+            {
+                return ConsoleColor.Cyan;
+            }
+            else if( tag == Colors.FGred )
+            {
+                return ConsoleColor.Red;
+            }
+            else if( tag == Colors.FGmagenta )
+            {
+                return ConsoleColor.Magenta;
+            }
+            else if( tag == Colors.FGyellow )
+            {
+                return ConsoleColor.Yellow;
+            }
+            else if( tag == Colors.FGwhite )
+            {
+                return ConsoleColor.White;
+            }
+            if( tag == Colors.BGblack )
+            {
+                return ConsoleColor.Black;
+            }
+            else if( tag == Colors.BGdarkblue )
+            {
+                return ConsoleColor.DarkBlue;
+            }
+            else if( tag == Colors.BGdarkgreen )
+            {
+                return ConsoleColor.DarkGreen;
+            }
+            else if( tag == Colors.BGdarkcyan )
+            {
+                return ConsoleColor.DarkCyan;
+            }
+            else if( tag == Colors.BGdarkred )
+            {
+                return ConsoleColor.DarkRed;
+            }
+            else if( tag == Colors.BGdarkmagenta )
+            {
+                return ConsoleColor.DarkMagenta;
+            }
+            else if( tag == Colors.BGdarkyellow )
+            {
+                return ConsoleColor.DarkYellow;
+            }
+            else if( tag == Colors.BGgray )
+            {
+                return ConsoleColor.Gray;
+            }
+            else if( tag == Colors.BGdarkgray )
+            {
+                return ConsoleColor.DarkGray;
+            }
+            else if( tag == Colors.BGblue )
+            {
+                return ConsoleColor.Blue;
+            }
+            else if( tag == Colors.BGgreen )
+            {
+                return ConsoleColor.Green;
+            }
+            else if( tag == Colors.BGcyan )
+            {
+                return ConsoleColor.Cyan;
+            }
+            else if( tag == Colors.BGred )
+            {
+                return ConsoleColor.Red;
+            }
+            else if( tag == Colors.BGmagenta )
+            {
+                return ConsoleColor.Magenta;
+            }
+            else if( tag == Colors.BGyellow )
+            {
+                return ConsoleColor.Yellow;
+            }
+            else if( tag == Colors.BGwhite )
+            {
+                return ConsoleColor.White;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        private static void applyColor( string tag )
+        {
+            if( tag == Colors.FGblack )
+            {
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+            else if( tag == Colors.FGdarkblue)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+            }
+            else if( tag == Colors.FGdarkgreen)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+            }
+            else if( tag == Colors.FGdarkcyan)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+            }
+            else if( tag == Colors.FGdarkred)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+            }
+            else if( tag == Colors.FGdarkmagenta)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            }
+            else if( tag == Colors.FGdarkyellow)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+            }
+            else if( tag == Colors.FGgray)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else if( tag == Colors.FGdarkgray)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+            }
+            else if( tag == Colors.FGblue)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+            }
+            else if( tag == Colors.FGgreen)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+            else if( tag == Colors.FGcyan)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            }
+            else if( tag == Colors.FGred)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                int i = 1;
+            }
+            else if( tag == Colors.FGmagenta)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            else if( tag == Colors.FGyellow)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            else if( tag == Colors.FGwhite)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            if( tag == Colors.BGblack )
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+            else if( tag == Colors.BGdarkblue )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkBlue;
+            }
+            else if( tag == Colors.BGdarkgreen )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkGreen;
+            }
+            else if( tag == Colors.BGdarkcyan )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkCyan;
+            }
+            else if( tag == Colors.BGdarkred )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkRed;
+            }
+            else if( tag == Colors.BGdarkmagenta )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkMagenta;
+            }
+            else if( tag == Colors.BGdarkyellow )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkYellow;
+            }
+            else if( tag == Colors.BGgray )
+            {
+                Console.BackgroundColor = ConsoleColor.Gray;
+            }
+            else if( tag == Colors.BGdarkgray )
+            {
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+            }
+            else if( tag == Colors.BGblue )
+            {
+                Console.BackgroundColor = ConsoleColor.Blue;
+            }
+            else if( tag == Colors.BGgreen )
+            {
+                Console.BackgroundColor = ConsoleColor.Green;
+            }
+            else if( tag == Colors.BGcyan )
+            {
+                Console.BackgroundColor = ConsoleColor.Cyan;
+            }
+            else if( tag == Colors.BGred )
+            {
+                Console.BackgroundColor = ConsoleColor.Red;
+            }
+            else if( tag == Colors.BGmagenta )
+            {
+                Console.BackgroundColor = ConsoleColor.Magenta;
+            }
+            else if( tag == Colors.BGyellow )
+            {
+                Console.BackgroundColor = ConsoleColor.Yellow;
+            }
+            else if( tag == Colors.BGwhite )
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.ResetColor();
+            }
+        }
+    }
+
     static class RandomNumberGenerator
     {
         static Random randomNumber = new Random(DateTime.Now.Millisecond + DateTime.Now.Second + DateTime.Now.Minute + DateTime.Now.Hour);
@@ -47,45 +404,45 @@ namespace Utility
             Console.SetCursorPosition(left + 1, top);
             for (int x = left + 1; x < right; x++)
             {
-                Console.Write(defines.HORIZONTALDOUBLELINE);
+                Console.Write(UnicodeChars.HORIZONTALDOUBLELINE);
             }
 
             // Draw bottom horizontal section
             Console.SetCursorPosition(left + 1, bottom);
             for (int x = (left + 1); x < right; x++)
             {
-                Console.Write(defines.HORIZONTALDOUBLELINE);
+                Console.Write(UnicodeChars.HORIZONTALDOUBLELINE);
             }
 
             // Draw left side vertical section
             for (int y = top + 1; y < bottom; y++)
             {
                 Console.SetCursorPosition(left, y);
-                Console.Write(defines.VERTICALDOUBLELINE);
+                Console.Write(UnicodeChars.VERTICALDOUBLELINE);
             }
 
             // Draw right side vertical section
             for (int y = top + 1; y < bottom; y++)
             {
                 Console.SetCursorPosition(right, y);
-                Console.Write(defines.VERTICALDOUBLELINE);
+                Console.Write(UnicodeChars.VERTICALDOUBLELINE);
             }
 
             // Draw top left corner piece
             Console.SetCursorPosition(left, top);
-            Console.Write(defines.TOPLEFTCORNER);
+            Console.Write(UnicodeChars.TOPLEFTCORNER);
 
             // Draw top right corner piece
             Console.SetCursorPosition(right, top);
-            Console.Write(defines.TOPRIGHTCORNER);
+            Console.Write(UnicodeChars.TOPRIGHTCORNER);
 
             // Draw bottom left corner piece
             Console.SetCursorPosition(left, bottom);
-            Console.Write(defines.BOTTOMLEFTCORNER);
+            Console.Write(UnicodeChars.BOTTOMLEFTCORNER);
 
             // Draw bottom right corner piece
             Console.SetCursorPosition(right, bottom);
-            Console.Write(defines.BOTTOMRIGHTCORNER);
+            Console.Write(UnicodeChars.BOTTOMRIGHTCORNER);
         }
     }
 

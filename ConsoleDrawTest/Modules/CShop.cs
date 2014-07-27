@@ -60,39 +60,39 @@ namespace CloneRPG
 
             // 1st row
             Console.SetCursorPosition(4, 1);
-            Console.Write(defines.DOUBLELINE_3WAYDOWN);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYDOWN);
 
             Console.SetCursorPosition(10, 1);
-            Console.Write(defines.DOUBLELINE_3WAYDOWN);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYDOWN);
 
             Console.SetCursorPosition(33, 1);
-            Console.Write(defines.DOUBLELINE_3WAYDOWN);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYDOWN);
 
             // 2nd row
             Console.SetCursorPosition(0, 3);
-            Console.Write(defines.DOUBLELINE_3WAYRIGHT);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYRIGHT);
 
             Console.SetCursorPosition(4, 3);
-            Console.Write(defines.DOUBLELINE_4WAY);
+            Console.Write(UnicodeChars.DOUBLELINE_4WAY);
 
             Console.SetCursorPosition(10, 3);
-            Console.Write(defines.DOUBLELINE_4WAY);
+            Console.Write(UnicodeChars.DOUBLELINE_4WAY);
 
             Console.SetCursorPosition(33, 3);
-            Console.Write(defines.DOUBLELINE_4WAY);
+            Console.Write(UnicodeChars.DOUBLELINE_4WAY);
 
             Console.SetCursorPosition(60, 3);
-            Console.Write(defines.DOUBLELINE_3WAYLEFT);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYLEFT);
 
             // 3rd row
             Console.SetCursorPosition(4, 19);
-            Console.Write(defines.DOUBLELINE_3WAYUP);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYUP);
 
             Console.SetCursorPosition(10, 19);
-            Console.Write(defines.DOUBLELINE_3WAYUP);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYUP);
 
             Console.SetCursorPosition(33, 19);
-            Console.Write(defines.DOUBLELINE_3WAYUP);
+            Console.Write(UnicodeChars.DOUBLELINE_3WAYUP);
         }
 
         void drawHeader()

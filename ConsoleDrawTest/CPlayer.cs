@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Diagnostics;
 using Utility;
 
 namespace CloneRPG
@@ -52,6 +53,8 @@ namespace CloneRPG
 
         public bool isNPC;
 
+        public Stopwatch swElapsed = null;
+		
         public CPlayer(CModuleManager moduleManagerArg )
         {
             name = "";
@@ -88,19 +91,22 @@ namespace CloneRPG
             isNPC = true;
 
             moduleManager = moduleManagerArg;
+			
+			swElapsed = new Stopwatch();
+            swElapsed.Start();
         }
 
         public double calculateAttack()
         {
             double hitChance = this.calculateHitChance();
-            if( hitChance < 5)
+            if (hitChance < 5)
             {
                 return 0;
             }
-            double statModifier = (this.strength * 2.0) + (this.dexterity) +  (this.intelligence*.3);
+            double statModifier = (this.strength * 2.0) + (this.dexterity) + (this.intelligence * .3);
             //double weaponModifier = 
 
-            double randomness = RandomNumberGenerator.generateRandomNumber(3, 5);
+            double randomness = (double)RandomNumberGenerator.generateRandomNumber(30, 50)/10.0;
 
             double chance = statModifier * randomness;
 
@@ -112,7 +118,7 @@ namespace CloneRPG
             double statModifier = (this.dexterity * 3.0) + (this.strength) + (this.intelligence * .3);
             //double weaponModifier = 
 
-            double randomness = RandomNumberGenerator.generateRandomNumber(0,5);
+            double randomness = RandomNumberGenerator.generateRandomNumber(0, 5);
 
             double chance = statModifier * randomness;
 
@@ -133,7 +139,7 @@ namespace CloneRPG
 
         public bool checkXPForLevel()
         {
-            if( xp >= xpToLevel[level] )
+            if (xp >= xpToLevel[level])
             {
                 return true;
             }
@@ -160,6 +166,54 @@ namespace CloneRPG
                 moduleManager.Log(errorMessage);
                 throw new Exception(errorMessage);
             }
+        }
+		  public double computeReadyTime()
+        {
+            // Return value in ms, make sure to multiply by 1000
+            //double readyTime = ((1 / Math.Log( dexterity + 2 )) * 5);
+            double readyTime = (((1 / Math.Log( dexterity + 25.0 )) * 8.0) * ((1750.0 - dexterity) / 1000.0))*1000.0;
+            return readyTime;
+        }
+
+        public bool isPlayerReady()
+        {
+
+            if( swElapsed.ElapsedMilliseconds >= computeReadyTime() )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public long getPlayerElapsedTime()
+        {
+            return swElapsed.ElapsedMilliseconds;
+        }
+
+        public void resetPlayerTimer()
+        {
+            swElapsed.Reset();
+            swElapsed.Start();
+        }
+
+        public bool isDead()
+        {
+            if( hp <= 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool isAlive()
+        {
+            return !isDead();
         }
     }
 }
