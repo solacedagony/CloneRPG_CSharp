@@ -8,7 +8,7 @@ using Defines;
 
 namespace CloneRPG
 {
-    class CInventoryMap : IModule
+    class CShop : IModule
     {
         CModuleManager moduleManager;
         int numberOfPages;
@@ -31,7 +31,9 @@ namespace CloneRPG
         const int column3 = 10;
         const int column4 = 33;
 
-        public CInventoryMap(CModuleManager moduleManagerArg)
+        CPlayer npc;
+
+        public CShop(CModuleManager moduleManagerArg)
         {
             moduleManager = moduleManagerArg;
         }
@@ -103,7 +105,7 @@ namespace CloneRPG
             Console.Write("#");
 
             Console.SetCursorPosition(quantityX, headerY);
-            Console.Write("Qty");
+            Console.Write("Cost");
 
             Console.SetCursorPosition(itemX, headerY);
             Console.Write("Item");
@@ -180,6 +182,11 @@ namespace CloneRPG
                 Console.Write(descriptions[i]);
                 y++;
             }
+        }
+
+        void setNPC( ref CPlayer npc)
+        {
+
         }
 
         void processInput()

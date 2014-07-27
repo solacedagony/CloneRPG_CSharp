@@ -20,6 +20,7 @@ namespace CloneRPG
         CModuleManager moduleManager;
         List<double> xpToLevel = new List<double>();
 
+        public double id;
         public string name;
         public int mapPosX;
         public int mapPosY;

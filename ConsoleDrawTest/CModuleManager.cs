@@ -21,6 +21,7 @@ namespace CloneRPG
             HelpMap,
             InventoryMap,
             InventoryFight,
+            Shop,
             Fight,
             Level,
             Exit
@@ -53,6 +54,7 @@ namespace CloneRPG
         CLevel level = null;
         CInventoryMap inventoryMap = null;
         CHelpMap helpMap = null;
+        CShop shop = null;
 
         // Player specific
         public CPlayer player = null;
@@ -61,7 +63,7 @@ namespace CloneRPG
         public CItemManager itemManager = null;
         List<CPlayer> npcs = null;
 
-        private IModule currentModule;
+        private IModule currentModule = null;
 
         // Constructor
         public CModuleManager()
@@ -75,6 +77,7 @@ namespace CloneRPG
             level = new CLevel(this);
             inventoryMap = new CInventoryMap(this);
             helpMap = new CHelpMap(this);
+            shop = new CShop(this);
 
             player = new CPlayer(this);
             itemManager = new CItemManager(this);

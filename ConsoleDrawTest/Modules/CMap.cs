@@ -28,6 +28,8 @@ namespace CloneRPG
         const int statsPosX = 70;
         const int statsPosY = 1;
 
+        int encounter = 0;
+
         public CMap(CModuleManager moduleManagerArg)
         {
             this.moduleManager = moduleManagerArg;
@@ -279,12 +281,13 @@ namespace CloneRPG
 
         private bool didEncounterOccur()
         {
-            int randomNumber = RandomNumberGenerator.generateRandomNumber(1, 100);
+            // This method allows encounters to occur more consistently
+            int randomNumber = RandomNumberGenerator.generateRandomNumber(5, 15);
+            encounter += randomNumber;
 
-            moduleManager.Log("Random number in CMap: " + randomNumber);
-
-            if (randomNumber > 80)
+            if (encounter > 100)
             {
+                encounter = 0;
                 return true;
             }
             else

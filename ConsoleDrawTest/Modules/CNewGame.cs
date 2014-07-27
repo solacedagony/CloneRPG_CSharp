@@ -73,6 +73,7 @@ namespace CloneRPG
                 {
                     case ConsoleKey.D1:
                         {
+                            moduleManager.player.id = CIDManager.getId();
                             moduleManager.player.playerClass = PlayerClass.WARRIOR;
                             moduleManager.player.hp = 100;
                             moduleManager.player.hpMax = 100;
@@ -98,6 +99,7 @@ namespace CloneRPG
                         }
                     case ConsoleKey.D2:
                         {
+                            moduleManager.player.id = CIDManager.getId();
                             moduleManager.player.playerClass = PlayerClass.THIEF;
                             moduleManager.player.hp = 70;
                             moduleManager.player.hpMax = 70;
@@ -120,6 +122,7 @@ namespace CloneRPG
                         }
                     case ConsoleKey.D3:
                         {
+                            moduleManager.player.id = CIDManager.getId();
                             moduleManager.player.playerClass = PlayerClass.MAGE;
                             moduleManager.player.hp = 40;
                             moduleManager.player.hpMax = 40;

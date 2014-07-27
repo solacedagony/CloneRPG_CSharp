@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CIDManager.cs" />
     <Compile Include="CItem.cs" />
     <Compile Include="Defines.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Modules\CFight.cs" />
     <Compile Include="Modules\CHelp.cs" />
     <Compile Include="CItemManager.cs" />
+    <Compile Include="Modules\CShop.cs" />
     <Compile Include="Modules\CLevel.cs" />
     <Compile Include="Modules\CLoadGame.cs" />
     <Compile Include="Modules\CMainMenu.cs" />
