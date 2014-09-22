@@ -41,3 +41,4 @@ Icon
 *.manifest
 Logs/
 obj/
+Players/
