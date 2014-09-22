@@ -19,17 +19,15 @@ namespace CloneRPG
             LoadGame,
             Map,
             HelpMap,
-            InventoryMap,
             InventoryFight,
             Shop,
-            Fight,
             Level,
             Exit
         };
 
         public const string gameName = "CloneRPG";
         public const int versionMajor = 1;
-        public const int versionMinor = 2;
+        public const int versionMinor = 3;
 
         private readonly string logFilename;
         private const string logDirectory = "Logs";
@@ -50,9 +48,7 @@ namespace CloneRPG
         CNewGame newGame = null;
         CLoadGame loadGame = null;
         public CMap map = null;
-        public CFight fight = null;
         CLevel level = null;
-        CInventoryMap inventoryMap = null;
         CHelpMap helpMap = null;
         CShop shop = null;
 
@@ -73,11 +69,8 @@ namespace CloneRPG
             newGame = new CNewGame(this);
             loadGame = new CLoadGame(this);
             map = new CMap(this);
-            fight = new CFight(this);
             level = new CLevel(this);
-            inventoryMap = new CInventoryMap(this);
             helpMap = new CHelpMap(this);
-            shop = new CShop(this);
 
             player = new CPlayer(this);
             itemManager = new CItemManager(this);
@@ -170,17 +163,9 @@ namespace CloneRPG
             {
                 currentModule = map;
             }
-            else if (newModule.Equals(ModuleType.Fight))
-            {
-                currentModule = fight;
-            }
             else if (newModule.Equals(ModuleType.Level))
             {
                 currentModule = level;
-            }
-            else if (newModule.Equals(ModuleType.InventoryMap))
-            {
-                currentModule = inventoryMap;
             }
             else if (newModule.Equals(ModuleType.HelpMap))
             {

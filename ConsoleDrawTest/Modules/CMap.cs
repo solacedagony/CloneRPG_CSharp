@@ -30,9 +30,38 @@ namespace CloneRPG
 
         int encounter = 0;
 
+        List<CPlayer> mapNPCs;
+
         public CMap(CModuleManager moduleManagerArg)
         {
             this.moduleManager = moduleManagerArg;
+
+            CPlayer newplayer = new CPlayer(moduleManager);
+            CItem item = new CItem();
+            item.name = "newitem";
+            item.description = "A really cool item";
+            newplayer.name = "NewGuy";
+
+            newplayer.inventory.Add(item);
+            newplayer.isNPC = true;
+            newplayer.npcType = NPCClass.BOSS;
+            newplayer.mapPosX = 5;
+            newplayer.mapPosY = 1;
+
+            newplayer.hp = 200;
+            newplayer.hpMax = 200;
+            newplayer.mp = 0;
+            newplayer.mpMax = 0;
+            newplayer.strength = 6;
+            newplayer.dexterity = 3;
+            newplayer.intelligence = 3;
+            newplayer.xp = 20;
+            newplayer.level = 1;
+
+            // TODO: Add shops at 66/2 and 70/2
+
+            mapNPCs = new List<CPlayer>();
+            mapNPCs.Add( newplayer );
 
             loadMap();
         }
@@ -46,6 +75,7 @@ namespace CloneRPG
             drawMap();
             drawStats();
             drawStaticText();
+            
             drawHero();
 
             processInput();
@@ -83,6 +113,31 @@ namespace CloneRPG
                         {
                             Console.SetCursorPosition(printX, printY);
                             Console.Write(map[mapY][mapX]);
+                        }
+
+                        // Check for NPC at this position
+                        for( int i = 0 ; i < mapNPCs.Count ; i++ )
+                        {
+                            if( mapNPCs[i].mapPosX == mapX &&
+                                mapNPCs[i].mapPosY == mapY &&
+                                mapNPCs[i].isNPCVisible() )
+                            {
+                                Console.BackgroundColor = ConsoleColor.Black;
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+                                Console.SetCursorPosition( printX, printY );
+
+                                if( mapNPCs[i].mapSymbol == "" )
+                                {
+                                    Console.Write( "U" );
+                                }
+                                else
+                                {
+                                    Console.Write( mapNPCs[i].mapSymbol );
+                                }
+
+                                Console.ResetColor();
+                            }
                         }
                     }
                 }
@@ -183,7 +238,7 @@ namespace CloneRPG
             {
                 case ConsoleKey.UpArrow:
                     {
-                        if (didCollisionOccur(moduleManager.player.mapPosX, moduleManager.player.mapPosY - 1))
+                        if (!didCollisionOccur(moduleManager.player.mapPosX, moduleManager.player.mapPosY - 1))
                         {
                             moduleManager.player.mapPosY--;
 
@@ -194,7 +249,7 @@ namespace CloneRPG
 
                 case ConsoleKey.DownArrow:
                     {
-                        if (didCollisionOccur(moduleManager.player.mapPosX, moduleManager.player.mapPosY + 1))
+                        if (!didCollisionOccur(moduleManager.player.mapPosX, moduleManager.player.mapPosY + 1))
                         {
                             moduleManager.player.mapPosY++;
 
@@ -205,7 +260,7 @@ namespace CloneRPG
 
                 case ConsoleKey.LeftArrow:
                     {
-                        if (didCollisionOccur(moduleManager.player.mapPosX - 1, moduleManager.player.mapPosY))
+                        if (!didCollisionOccur(moduleManager.player.mapPosX - 1, moduleManager.player.mapPosY))
                         {
                             moduleManager.player.mapPosX--;
 
@@ -216,7 +271,7 @@ namespace CloneRPG
 
                 case ConsoleKey.RightArrow:
                     {
-                        if (didCollisionOccur(moduleManager.player.mapPosX + 1, moduleManager.player.mapPosY))
+                        if (!didCollisionOccur(moduleManager.player.mapPosX + 1, moduleManager.player.mapPosY))
                         {
                             moduleManager.player.mapPosX++;
 
@@ -248,7 +303,42 @@ namespace CloneRPG
 
                 case ConsoleKey.I:
                     {
-                        moduleManager.switchModule(CModuleManager.ModuleType.InventoryMap);
+                        CInventoryMap inventoryMap = new CInventoryMap( moduleManager );
+                        inventoryMap.draw();
+                    }
+                    break;
+
+                case ConsoleKey.A:
+                    {
+                        // Find nearest character starting north
+                        for( int i = 0 ; i < mapNPCs.Count ; i++)
+                        {
+                            // Check north, east, south, west
+                            if( mapNPCs[i].mapPosX == moduleManager.player.mapPosX &&
+                                mapNPCs[i].mapPosY == (moduleManager.player.mapPosY-1) &&
+                                mapNPCs[i].isNPCVisible())
+                            {
+                                triggerNPCType(mapNPCs[i]);
+                            }
+                            else if( mapNPCs[i].mapPosX == (moduleManager.player.mapPosX+1) &&
+                                     mapNPCs[i].mapPosY == moduleManager.player.mapPosY &&
+                                     mapNPCs[i].isNPCVisible() )
+                            {
+                                triggerNPCType( mapNPCs[i] );
+                            }
+                            else if( mapNPCs[i].mapPosX == moduleManager.player.mapPosX &&
+                                     mapNPCs[i].mapPosY == (moduleManager.player.mapPosY + 1) &&
+                                     mapNPCs[i].isNPCVisible() )
+                            {
+                                triggerNPCType( mapNPCs[i] );
+                            }
+                            else if( mapNPCs[i].mapPosX == (moduleManager.player.mapPosX-1) &&
+                                     mapNPCs[i].mapPosY == moduleManager.player.mapPosY &&
+                                     mapNPCs[i].isNPCVisible() )
+                            {
+                                triggerNPCType( mapNPCs[i] );
+                            }
+                        }
                     }
                     break;
             }
@@ -256,36 +346,84 @@ namespace CloneRPG
             if (encounterOccurred)
             {
                 // Switch to fight mode 
-                setupEnemy();
-                moduleManager.switchModule(CModuleManager.ModuleType.Fight);
+                List<CPlayer> enemyList = setupEnemy();
+                CFight fight = new CFight( moduleManager, enemyList );
+                fight.draw();
+            }
+        }
+
+        private void triggerNPCType( CPlayer npc )
+        {
+            if( npc.npcType == NPCClass.BOSS)
+            {
+                List<CPlayer> enemyList = new List<CPlayer>();
+                enemyList.Add( npc );
+
+                CFight fight = new CFight( moduleManager, enemyList );
+                fight.draw();
+            }
+            else if( npc.npcType == NPCClass.DIALOG)
+            {
+                // Add dialog scene here
+            }
+            else if( npc.npcType == NPCClass.SHOP )
+            {
+                CShop shop = new CShop( moduleManager, npc );
+                shop.draw();
             }
         }
 
         private bool didCollisionOccur(int x, int y)
         {
+            /////////////////////////////////
+            // Check all map characters
+            /////////////////////////////////
             string collisionCharacters = "#*!@$%^&()_+-=,./<>?1234567890abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             for (int i = 0; i < collisionCharacters.Length; i++)
             {
-                if (x >= 0 &&
+                // Ensure an out of bounds index doesn't occur
+                if( x >= 0 &&
                     x < map[0].Length &&
                     y >= 0 &&
-                    y < map.Count())
-                    if (map[y][x].ToString() == collisionCharacters.Substring(i, 1))
+                    y < map.Count() )
+                {
+                    // Check map characters
+                    if( map[y][x].ToString() == collisionCharacters.Substring( i, 1 ) )
                     {
-                        return false;
+                        return true;
                     }
+                }
             }
 
-            return true;
+            ////////////////////////////////
+            // Check map NPC locations
+            ////////////////////////////////
+            for( int i = 0 ; i < mapNPCs.Count ; i++ )
+            {
+                if( mapNPCs[i].mapPosX == x &&
+                    mapNPCs[i].mapPosY == y &&
+                    mapNPCs[i].isNPCVisible() )
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool didEncounterOccur()
         {
+            return false;
             // This method allows encounters to occur more consistently
-            int randomNumber = RandomNumberGenerator.generateRandomNumber(5, 15);
+            const int lowValue = 5;
+            const int highValue = 5;
+            const int encounterTotal = 100;
+
+            int randomNumber = RandomNumberGenerator.generateRandomNumber( lowValue, highValue );
             encounter += randomNumber;
 
-            if (encounter > 100)
+            // Check for an encounter
+            if( encounter > encounterTotal )
             {
                 encounter = 0;
                 return true;
@@ -296,8 +434,10 @@ namespace CloneRPG
             }
         }
 
-        private void setupEnemy()
+        private List<CPlayer> setupEnemy()
         {
+            List<CPlayer> enemyList = new List<CPlayer>();
+
             CPlayer tempEnemy = new CPlayer(moduleManager);
             tempEnemy.name = "BadGuy";
             tempEnemy.hp = 20;
@@ -310,9 +450,22 @@ namespace CloneRPG
             tempEnemy.xp = 20;
             tempEnemy.level = 1;
 
-            moduleManager.fight.setEnemy(tempEnemy);
+            CPlayer tempEnemy2 = new CPlayer( moduleManager );
+            tempEnemy2.name = "BadGuy2";
+            tempEnemy2.hp = 20;
+            tempEnemy2.hpMax = 20;
+            tempEnemy2.mp = 20;
+            tempEnemy2.mpMax = 20;
+            tempEnemy2.strength = 3;
+            tempEnemy2.dexterity = 3;
+            tempEnemy2.intelligence = 3;
+            tempEnemy2.xp = 20;
+            tempEnemy2.level = 1;
 
-            tempEnemy = null;
+            enemyList.Add( tempEnemy );
+            enemyList.Add( tempEnemy2 );
+
+            return enemyList;
         }
 
         private void loadMap()
@@ -320,12 +473,20 @@ namespace CloneRPG
             map = new List<string>();
 
             map.Add("##################################################################################################################################################");
-            map.Add("#         ########################################################################################################################################");
-            map.Add("##################################################################################################################################################");
-            map.Add("#######################################################################################################################        ###################");
-            map.Add("##################################################################################################################################################");
-            map.Add("##################################################################################################################################################");
-            map.Add("##################################################################################################################################################");
+            map.Add("#           ###############             ##################       /-\\/-\\            ################################                   #########");
+            map.Add("##########   ##########        #####       ############          | |  | |           ################################                     #########");
+            map.Add("############     ###       ############                                                      ######################                     ##########");
+            map.Add("################      ######################                                                     ################              ###################");
+            map.Add("######################################################                                  __-__      #############        ##########################");
+            map.Add("#######################################################                              /~~     ~~\\    ##########         ###########################");
+            map.Add("#########################################################                          /~~         ~~\\   ##########    ###############################");
+            map.Add("##########################################################                        {               }    ######     ################################");
+            map.Add("##########################################################                         \\  _-     -_  /   #######       ###############################");
+            map.Add("###########################################################                          ~  \\\\ //  ~  ######      ####################################");
+            map.Add("###########################################################                              | |                  ####################################");
+            map.Add("###########################################################                              | |                 #####################################");
+            map.Add("###########################################################                            //   \\\\    ################################################");
+            map.Add("###########################################################                                        ###############################################");
             map.Add("##################################################################################################################################################");
             map.Add("##################################################################################################################################################");
             map.Add("##################################################################################################################################################");

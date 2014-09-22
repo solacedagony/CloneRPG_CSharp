@@ -8,9 +8,11 @@ using Defines;
 
 namespace CloneRPG
 {
-    class CShop : IModule
+    class CShop
     {
         CModuleManager moduleManager;
+        CPlayer shopPlayer;
+
         int numberOfPages;
         int currentPage = 0;
         const int maxItemsPerPage = 15;
@@ -31,11 +33,22 @@ namespace CloneRPG
         const int column3 = 10;
         const int column4 = 33;
 
-        CPlayer npc;
+        
 
         public CShop(CModuleManager moduleManagerArg)
         {
             moduleManager = moduleManagerArg;
+            shopPlayer = moduleManager.player;
+
+            calculateList();
+        }
+
+        public CShop(CModuleManager moduleManagerArg, CPlayer shopPlayerArg)
+        {
+            moduleManager = moduleManagerArg;
+            shopPlayer = shopPlayerArg;
+
+            calculateList();
         }
 
         public void draw()
@@ -99,7 +112,7 @@ namespace CloneRPG
         {
             Console.ResetColor();
             Console.SetCursorPosition(0, 0);
-            Console.Write(moduleManager.player.name + "'s Inventory - Page " + currentPage + "/" + numberOfPages);
+            Console.Write(shopPlayer.name + "'s Inventory - Page " + currentPage + "/" + numberOfPages);
 
             Console.SetCursorPosition(numberX, headerY);
             Console.Write("#");
@@ -122,7 +135,7 @@ namespace CloneRPG
             {
                 int index = i + offset;
 
-                if (index >= moduleManager.player.inventory.Count())
+                if (index >= shopPlayer.inventory.Count())
                 {
                     break;
                 }
@@ -152,14 +165,14 @@ namespace CloneRPG
                 Console.Write(numberFieldStr);
 
                 Console.SetCursorPosition(quantityX, y);
-                Console.Write(moduleManager.player.inventory[i].quantity.ToString());
+                Console.Write(shopPlayer.inventory[i].quantity.ToString());
 
                 Console.SetCursorPosition(itemX, y);
-                Console.Write(moduleManager.player.inventory[i].name);
+                Console.Write( shopPlayer.inventory[i].name );
 
                 // Write dependent on item type
                 Console.SetCursorPosition(descriptionX, y);
-                //Console.Write(moduleManager.player.inventory[i].decription());
+                Console.Write( shopPlayer.inventory[i].description );
 
                 y++;
             }
@@ -182,11 +195,6 @@ namespace CloneRPG
                 Console.Write(descriptions[i]);
                 y++;
             }
-        }
-
-        void setNPC( ref CPlayer npc)
-        {
-
         }
 
         void processInput()
@@ -234,15 +242,10 @@ namespace CloneRPG
             }
         }
 
-        public void initialize()
+        public void calculateList()
         {
-            numberOfPages = (int)((double)moduleManager.player.inventory.Count() / (double)maxItemsPerPage) + 1;
+            numberOfPages = (int)((double)shopPlayer.inventory.Count() / (double)maxItemsPerPage) + 1;
             currentPage = 1;
-            //calculateList();
-        }
-
-        public void destroy()
-        {
         }
     }
 }

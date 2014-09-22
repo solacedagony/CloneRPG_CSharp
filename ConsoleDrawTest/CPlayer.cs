@@ -16,16 +16,25 @@ namespace CloneRPG
         MAGE
     }
 
+    public enum NPCClass
+    {
+        SHOP,
+        BOSS,
+        DIALOG
+    }
+
     class CPlayer
     {
         CModuleManager moduleManager;
         List<double> xpToLevel = new List<double>();
 
+        // Interal data
         public double id;
         public string name;
         public int mapPosX;
         public int mapPosY;
 
+        // Player data
         public double hp;
         public double hpMax;
         public double mp;
@@ -40,6 +49,7 @@ namespace CloneRPG
 
         public PlayerClass playerClass;
 
+        // Inventory and gear
         public List<CItem> inventory;
         public CItem weaponLeft;
         public CItem weaponRight;
@@ -52,11 +62,32 @@ namespace CloneRPG
         public CItem neck;
 
         public bool isNPC;
+        public NPCClass npcType;
+        public string mapSymbol;
 
         public Stopwatch swElapsed = null;
+
+        // Statistics tracking
+        public const int damageDealt_Melee = 0;
+        public const int damageDealt_Skill = 1;
+        public const int damageDealt_Magic = 2;
+
+        public const int damageReceived_Melee = 3;
+        public const int damageReceived_Skill = 4;
+        public const int damageReceived_Magic = 5;
+
+        public const int gold_Received = 6;
+        public const int gold_Spent = 7;
+
+        public const int potions_Consumed = 8;
+
+        Dictionary<int, double> statistics_Record;
 		
         public CPlayer(CModuleManager moduleManagerArg )
         {
+            moduleManager = moduleManagerArg;
+
+            // Both PCs and NPCs
             name = "";
             mapPosX = 1;
             mapPosY = 1;
@@ -73,8 +104,6 @@ namespace CloneRPG
             xp = 0;
             level = 1;
 
-            playerClass = PlayerClass.WARRIOR;
-
             calculateXPToLevel();
 
             inventory = new List<CItem>();
@@ -90,10 +119,15 @@ namespace CloneRPG
 
             isNPC = true;
 
-            moduleManager = moduleManagerArg;
-			
-			swElapsed = new Stopwatch();
+            swElapsed = new Stopwatch();
             swElapsed.Start();
+
+            // PCs only
+            playerClass = PlayerClass.WARRIOR;
+
+            // NPCs only
+            npcType = NPCClass.DIALOG;
+            mapSymbol = "D";
         }
 
         public double calculateAttack()
@@ -214,6 +248,31 @@ namespace CloneRPG
         public bool isAlive()
         {
             return !isDead();
+        }
+
+        public bool isNPCVisible()
+        {
+            if( npcType == NPCClass.BOSS)
+            {
+                if( isAlive())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if( npcType == NPCClass.SHOP)
+            {
+                return true;
+            }
+            else if( npcType == NPCClass.DIALOG)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

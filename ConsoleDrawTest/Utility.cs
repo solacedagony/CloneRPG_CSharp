@@ -281,7 +281,6 @@ namespace Utility
             else if( tag == Colors.FGred)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                int i = 1;
             }
             else if( tag == Colors.FGmagenta)
             {

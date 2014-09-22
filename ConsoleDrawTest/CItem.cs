@@ -37,8 +37,9 @@ namespace CloneRPG
             EXPLOSIVE
         };
 
-        // Properties all items must 
+        // Properties all items must have
         public string name = "";
+        public string description = "";
         public int cost = -1;
         public ItemType itemType = ItemType.NONE;
         public int quantity = 0;

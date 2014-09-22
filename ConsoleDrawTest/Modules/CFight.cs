@@ -18,8 +18,8 @@ namespace CloneRPG
         List<string> menuList = new List<string>();
         List<string> buffer = new List<string>();
 
-        CPlayer player = null;
         List<CPlayer> enemyList = null;
+        const int maxEnemies = 5;
 
         int playerStatsX = 0;
         int playerStatsY = 0;
@@ -61,24 +61,104 @@ namespace CloneRPG
             ENEMYLIST
         }
 
-        public CFight( CModuleManager moduleManagerArg )
+        public CFight( CModuleManager moduleManagerArg, List<CPlayer> enemyListArg )
         {
             moduleManager = moduleManagerArg;
 
             enemyList = new List<CPlayer>();
+            enemyList = enemyListArg;
+
+            // Ensure enemyList does not exceed maxEnemies
+            while( enemyList.Count > maxEnemies )
+            {
+                moduleManager.Log( "Removed enemy from list in CFight::ctor: " );
+                moduleManager.Log( "  Name: " + enemyList[enemyList.Count - 1].name );
+                moduleManager.Log( "  Id: " + enemyList[enemyList.Count - 1].id );
+                enemyList.RemoveAt( enemyList.Count - 1 );
+            }
+
+            // Add block lists for each enemy and reset fight timers
+            enemyBlockList = new List<int>();
+            enemyBlockList.Clear();
+            for( int i = 0 ; i < enemyList.Count() ; i++ )
+            {
+                enemyBlockList.Add( -1 );
+                enemyList[i].resetPlayerTimer();
+            }
+
+            moduleManager.player.resetPlayerTimer();
+
+            fightGameState = FightGameState.FIGHT;
+            inputMenuState = InputMenuState.ATTACKLIST;
+
+            /*
+            enemyList.Clear();
+            CPlayer enemy = new CPlayer( moduleManager );
+            enemy.name = "Orc1";
+            enemy.strength = 1;
+            enemy.dexterity = 1;
+            enemy.intelligence = 1;
+            enemy.hp = 100;
+            enemy.hpMax = enemy.hp;
+            enemy.mp = 0;
+            enemy.mpMax = enemy.mp;
+            enemy.level = 1;
+            enemy.id = 0;
+            enemy.isNPC = true;
+            enemy.xp = 5;
+            enemy.resetPlayerTimer();
+            enemyList.Add( enemy );
+
+            enemy = new CPlayer( moduleManager );
+            enemy.name = "Orc2";
+            enemy.strength = 1;
+            enemy.dexterity = 1;
+            enemy.intelligence = 1;
+            enemy.hp = 100;
+            enemy.hpMax = enemy.hp;
+            enemy.mp = 0;
+            enemy.mpMax = enemy.mp;
+            enemy.level = 1;
+            enemy.id = 0;
+            enemy.isNPC = true;
+            enemy.xp = 5;
+            enemy.resetPlayerTimer();
+            enemyList.Add( enemy );
+
+            enemy = new CPlayer( moduleManager );
+            enemy.name = "Orc3";
+            enemy.strength = 1;
+            enemy.dexterity = 1;
+            enemy.intelligence = 1;
+            enemy.hp = 100;
+            enemy.hpMax = enemy.hp;
+            enemy.mp = 0;
+            enemy.mpMax = enemy.mp;
+            enemy.level = 1;
+            enemy.id = 0;
+            enemy.isNPC = true;
+            enemy.xp = 5;
+            enemy.resetPlayerTimer();
+            enemyList.Add( enemy );
+
+            enemy = null;
+            */
+            
+
         }
 
         public void draw()
         {
             // Clear screen
-            Console.Clear();
+            
 
-            switch( fightGameState )
+            while( fightGameState == FightGameState.FIGHT )
             {
-                case FightGameState.FIGHT:
-                    fight();
-                    break;
+                fight();
+            }
 
+            switch( fightGameState)
+            {
                 case FightGameState.VICTORY:
                     victory();
                     break;
@@ -91,6 +171,7 @@ namespace CloneRPG
 
         private void fight()
         {
+            Console.Clear();
             printPlayerStats();
             printEnemyStats();
             printInputMenu();
@@ -151,7 +232,7 @@ namespace CloneRPG
             }
             else if( inputMenuState == InputMenuState.ENEMYLIST )
             {
-                for( int i = 0 ; i < 5 ; i++ )
+                for( int i = 0 ; i < maxEnemies ; i++ )
                 {
                     if( i < enemyList.Count() )
                     {
@@ -414,6 +495,8 @@ namespace CloneRPG
 
         private void victory()
         {
+            Console.Clear();
+
             // Print fight information
             int y = 0;
             Console.SetCursorPosition( 0, y );
@@ -450,14 +533,14 @@ namespace CloneRPG
 
         private void defeat()
         {
+            Console.Clear();
+
             int y = 0;
             Console.SetCursorPosition( 0, y );
             Console.Write( "You were defeated..." );
             y += 2;
 
             Utility.Interaction.pressAnyKeyToContinue( 0, y );
-
-            // TODO: Death state clean up?
 
             // Reset fight variables
             resetFightScene();
@@ -466,11 +549,6 @@ namespace CloneRPG
             moduleManager.player = null;
 
             moduleManager.switchModule( CModuleManager.ModuleType.MainMenu );
-        }
-
-        public void setEnemy( CPlayer enemyArg )
-        {
-
         }
 
         private void resetFightScene()
@@ -482,70 +560,6 @@ namespace CloneRPG
 
         public void initialize()
         {
-            moduleManager.player.resetPlayerTimer();
-
-            fightGameState = FightGameState.FIGHT;
-            inputMenuState = InputMenuState.ATTACKLIST;
-
-            enemyList.Clear();
-            CPlayer enemy = new CPlayer( moduleManager );
-            enemy.name = "Orc1";
-            enemy.strength = 1;
-            enemy.dexterity = 1;
-            enemy.intelligence = 1;
-            enemy.hp = 100;
-            enemy.hpMax = enemy.hp;
-            enemy.mp = 0;
-            enemy.mpMax = enemy.mp;
-            enemy.level = 1;
-            enemy.id = 0;
-            enemy.isNPC = true;
-            enemy.xp = 5;
-            enemy.resetPlayerTimer();
-            enemyList.Add( enemy );
-
-            enemy = new CPlayer( moduleManager );
-            enemy.name = "Orc2";
-            enemy.strength = 1;
-            enemy.dexterity = 1;
-            enemy.intelligence = 1;
-            enemy.hp = 100;
-            enemy.hpMax = enemy.hp;
-            enemy.mp = 0;
-            enemy.mpMax = enemy.mp;
-            enemy.level = 1;
-            enemy.id = 0;
-            enemy.isNPC = true;
-            enemy.xp = 5;
-            enemy.resetPlayerTimer();
-            enemyList.Add( enemy );
-
-            enemy = new CPlayer( moduleManager );
-            enemy.name = "Orc3";
-            enemy.strength = 1;
-            enemy.dexterity = 1;
-            enemy.intelligence = 1;
-            enemy.hp = 100;
-            enemy.hpMax = enemy.hp;
-            enemy.mp = 0;
-            enemy.mpMax = enemy.mp;
-            enemy.level = 1;
-            enemy.id = 0;
-            enemy.isNPC = true;
-            enemy.xp = 5;
-            enemy.resetPlayerTimer();
-            enemyList.Add( enemy );
-
-            enemy = null;
-
-            enemyBlockList = new List<int>();
-
-            // Add block lists for each enemy
-            for( int i = 0 ; i < enemyList.Count() ; i++ )
-            {
-                enemyBlockList.Add( -1 );
-                enemyList[i].resetPlayerTimer();
-            }
         }
 
         public void destroy()
